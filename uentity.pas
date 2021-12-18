@@ -8,6 +8,7 @@ uses
   Classes, SysUtils;
 
 type
+  { TEntity }
   TEntity = class
     strict private
       name: string;
@@ -15,23 +16,32 @@ type
       hp: integer;
       posX: integer;
       posY: integer;
+      speed: integer;
+      velocity: array [0..1] of integer;
     public
-      constructor create(nm: string; max_health: integer);
+      constructor create(nm: string; maxHealth: integer; spd: integer);
       procedure changeHP(value: integer);
-      procedure move(x: int; y: int);
-      procedure setPos(x: int; y: int);
+      procedure move(x: integer; y: integer);
+      procedure setPos(x: integer; y: integer);
       function getHP(): integer;
       function getPosX(): integer;
       function getPosY(): integer;
+      function getSpeed(): integer;
+      procedure setSpeed(value: integer);
+      function getVelocityX(): integer;
+      function getVelocityY(): integer;
+      procedure setVelocityX(value: integer);
+      procedure setVelocityY(value: integer);
   end;
 
 implementation
 
-constructor TEntity.create(nm: string; max_health: integer);
+constructor TEntity.create(nm: string; maxHealth: integer; spd: integer);
 begin
   name := nm;
-  maxHP := max_health;
-  hp := max_health;
+  maxHP := maxHealth;
+  hp := maxHealth;
+  speed := spd;
 end;
 
 // Diese Funktion fuegt Lebenspunkte hinzu oder zieht welche ab.
@@ -46,14 +56,14 @@ begin
 end;
 
 // Entity in eine bestimmte Richtung bewegen (relativ zur momentanen Position)
-procedure TEntity.move(x: int; y: int);
+procedure TEntity.move(x: integer; y: integer);
 begin
   posX := posX + x;
   posY := posY + y;
 end;
 
 // Absolute Position der Entity setzen
-procedure TEntity.setPos(x: int; y: int);
+procedure TEntity.setPos(x: integer; y: integer);
 begin
   posX := x;
   posY := y;
@@ -72,6 +82,36 @@ end;
 function TEntity.getPosY(): integer;
 begin
   Result := posY;
+end;
+
+function TEntity.getSpeed(): integer;
+begin
+  Result := speed;
+end;
+
+procedure TEntity.setSpeed(value: integer);
+begin
+  speed := value;
+end;
+
+function TEntity.getVelocityX(): integer;
+begin
+  Result := velocity[0];
+end;
+
+function TEntity.getVelocityY(): integer;
+begin
+  Result := velocity[1];
+end;
+
+procedure TEntity.setVelocityX(value: integer);
+begin
+  velocity[0] := value;
+end;
+
+procedure TEntity.setVelocityY(value: integer);
+begin
+  velocity[1] := value;
 end;
 
 end.
