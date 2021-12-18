@@ -1,0 +1,3 @@
+[submodule "sdl2pascal"]
+	path = sdl2pascal
+	url = https://github.com/PascalGameDevelopment/SDL2-for-Pascal
