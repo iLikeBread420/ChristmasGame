@@ -1,4 +1,4 @@
-unit ugraphitem;
+unit uentitydisplay;
 
 {$mode objfpc}{$H+}
 
