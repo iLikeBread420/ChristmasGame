@@ -36,7 +36,7 @@
         <IsPartOfProject Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="ugraphitem.pas"/>
+        <Filename Value="uentitydisplay.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
