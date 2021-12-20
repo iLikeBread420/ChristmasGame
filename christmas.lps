@@ -17,8 +17,8 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="19"/>
-        <CursorPos X="95" Y="86"/>
+        <TopLine Value="82"/>
+        <CursorPos X="54" Y="37"/>
         <UsageCount Value="34"/>
         <Loaded Value="True"/>
       </Unit1>
@@ -26,6 +26,7 @@
         <Filename Value="uentitydisplay.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
+        <TopLine Value="2"/>
         <CursorPos X="28" Y="38"/>
         <UsageCount Value="32"/>
         <Loaded Value="True"/>
@@ -34,7 +35,6 @@
         <Filename Value="uentity.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="63"/>
         <CursorPos X="23" Y="104"/>
         <UsageCount Value="28"/>
         <Loaded Value="True"/>
