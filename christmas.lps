@@ -9,16 +9,17 @@
         <Filename Value="christmas.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos X="13" Y="18"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="35"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="ugamedisplay.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="82"/>
-        <CursorPos X="54" Y="37"/>
-        <UsageCount Value="34"/>
+        <TopLine Value="13"/>
+        <CursorPos X="28" Y="8"/>
+        <UsageCount Value="35"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
@@ -26,18 +27,16 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="14"/>
-        <CursorPos X="38" Y="37"/>
-        <UsageCount Value="32"/>
+        <CursorPos X="36" Y="43"/>
+        <UsageCount Value="33"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="uentity.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="52"/>
         <CursorPos X="23" Y="104"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -77,7 +76,7 @@
         <UsageCount Value="17"/>
       </Unit9>
     </Units>
-    <JumpHistory Count="21" HistoryIndex="20">
+    <JumpHistory Count="23" HistoryIndex="22">
       <Position1>
         <Filename Value="ugamedisplay.pas"/>
         <Caret Line="25" Column="27"/>
@@ -162,6 +161,14 @@
         <Filename Value="uentity.pas"/>
         <Caret Line="33" Column="16" TopLine="6"/>
       </Position21>
+      <Position22>
+        <Filename Value="uentity.pas"/>
+        <Caret Line="104" Column="23"/>
+      </Position22>
+      <Position23>
+        <Filename Value="uentitydisplay.pas"/>
+        <Caret Line="43" Column="36" TopLine="14"/>
+      </Position23>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
