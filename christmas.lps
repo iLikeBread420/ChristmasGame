@@ -15,7 +15,6 @@
       <Unit1>
         <Filename Value="ugamedisplay.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="82"/>
         <CursorPos X="54" Y="37"/>
@@ -26,15 +25,17 @@
         <Filename Value="uentitydisplay.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="2"/>
-        <CursorPos X="28" Y="38"/>
+        <TopLine Value="14"/>
+        <CursorPos X="38" Y="37"/>
         <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="uentity.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
+        <TopLine Value="52"/>
         <CursorPos X="23" Y="104"/>
         <UsageCount Value="28"/>
         <Loaded Value="True"/>
