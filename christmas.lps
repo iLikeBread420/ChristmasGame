@@ -24,8 +24,14 @@
       <Unit2>
         <Filename Value="uentitydisplay.pas"/>
         <IsPartOfProject Value="True"/>
+<<<<<<< HEAD
         <EditorIndex Value="6"/>
         <TopLine Value="24"/>
+=======
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="31"/>
+>>>>>>> 9b8cc7dcd78d031906376a467a988090c9f3bde2
         <CursorPos X="20" Y="75"/>
         <UsageCount Value="47"/>
         <Loaded Value="True"/>
