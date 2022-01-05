@@ -29,8 +29,8 @@ type
       function getSpeed(): integer;
       procedure setSpeed(value: integer);
       function getVelocityX(): integer;
-      function getVelocityY(): integer;
       procedure setVelocityX(value: integer);
+      function getVelocityY(): integer;
       procedure setVelocityY(value: integer);
   end;
 
@@ -99,14 +99,14 @@ begin
   Result := velocity[0];
 end;
 
-function TEntity.getVelocityY(): integer;
-begin
-  Result := velocity[1];
-end;
-
 procedure TEntity.setVelocityX(value: integer);
 begin
   velocity[0] := value;
+end;
+
+function TEntity.getVelocityY(): integer;
+begin
+  Result := velocity[1];
 end;
 
 procedure TEntity.setVelocityY(value: integer);

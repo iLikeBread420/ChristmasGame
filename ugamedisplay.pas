@@ -5,7 +5,7 @@ unit ugamedisplay;
 interface
 
 uses
-  Classes, SysUtils, Math, SDL2, SDL2_Image, UEntity, UEntityDisplay;
+  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay;
 
 type
   TGameDisplay = class
@@ -17,6 +17,7 @@ type
       mainViewport: TSDL_Rect;
       player: TEntity;
       playerDisplay: TEntityDisplay;
+      procedure KeepInBounds();
     public
       constructor create();
       procedure show();
@@ -46,15 +47,25 @@ end;
 procedure TGameDisplay.show();
 var
   running: boolean;
-  loopStart, loopEnd: integer;
+  loopStart, loopEnd, velocityStepEnd: integer;
   elapsedMilli: double;
+  dt: double;
+  gravity, sideForce: integer;
+  d_pressed, a_pressed: boolean;
+  wasOutY, wasOutX: boolean;
 begin
   if has_error <> 0 then halt;
+
+  gravity := -10000000;
+  wasOutY := false; wasOutX := false;
+  a_pressed := false; d_pressed := false;
 
   running := true;
   while running do
   begin
     loopStart := SDL_GetPerformanceCounter();
+    velocityStepEnd := SDL_GetPerformanceCounter();
+    dt := (velocityStepEnd - loopStart) / SDL_GetPerformanceFrequency() * 1000;
     // Main Viewport clearen
     SDL_RenderSetViewport(renderer, @mainViewport);
     SDL_SetRenderDrawColor(renderer, 0, 170, 85, 255);
@@ -68,22 +79,53 @@ begin
       begin
         // Welche Taste wurde gedrueckt; jeweils verschiedene Dinge tun
         case (event^.key.keysym.sym) of
-        SDLK_d : player.setVelocityX(1);
-        SDLK_a : player.setVelocityX(-1);
-        SDLK_w : player.setVelocityY(-1);
-        SDLK_s : player.setVelocityY(1);
+        SDLK_d : d_pressed := true;
+        SDLK_a : a_pressed := true;
+        SDLK_SPACE:
+        begin
+          // Zahl etwas hoeher, weil es so intuitiver ist.
+          if player.getPosY >= 726 then
+          begin
+            player.setVelocityY(60000);
+          end;
+        end;
+        //SDLK_s : player.setMovementTowards(DIR_BOTTOM, 1);
         SDLK_ESCAPE : running := false;
       end;
       end
       else if event^.type_ = SDL_KEYUP then
       begin
         case (event^.key.keysym.sym) of
-        SDLK_d, SDLK_a : player.setVelocityX(0);
-        SDLK_w, SDLK_s : player.setVelocityY(0);
+        SDLK_d: d_pressed := false;
+        SDLK_a: a_pressed := false;
+        //SDLK_w: player.setMovementTowards(DIR_TOP, 0);
+        //SDLK_s: player.setMovementTowards(DIR_BOTTOM, 0);
         end;
       end;
     end;
-    player.move(player.getVelocityX * player.getSpeed, player.getVelocityY * player.getSpeed);
+
+    // Move in Y-Direction for jumping
+    player.move(0, -1 * Floor(player.getVelocityY * dt));
+    player.setVelocityY(player.getVelocityY + Floor(gravity * dt));
+
+    // Herausfinden, welche Kombinationen von a und d gepresst sind, fuer Bewegung in Richtung x.
+    if d_pressed then
+    begin
+      player.setVelocityX(1);
+    end;
+    if a_pressed then
+    begin
+      player.setVelocityX(-1);
+    end;
+    if (d_pressed and a_pressed) or (not(d_pressed) and not(a_pressed)) then
+    begin
+      player.setVelocityX(0);
+    end;
+
+    KeepInBounds();
+
+    // Bewegung in X-Richtung
+    player.move(player.getVelocityX * player.getSpeed, 0);
 
     // Rendering
     // Sollte spaeter wahrscheinlich durch einen Loop ersetzt werden.
@@ -100,6 +142,30 @@ begin
     elapsedMilli := (loopEnd - loopStart) / SDL_GetPerformanceFrequency() * 1000.0;
     SDL_Delay(Floor(16.6666 - elapsedMilli));
     writeln('Elapsed: ' + IntToStr(Floor(16.6666 - elapsedMilli)));
+  end;
+end;
+
+procedure TGameDisplay.KeepInBounds();
+begin
+  if player.getPosX >= 968 then
+  begin
+    player.setPos(968, player.getPosY);
+    player.setVelocityX(-1 * player.getVelocityX);
+  end
+  else if player.getPosX <= 0 then
+  begin
+    player.setPos(0, player.getPosY);
+    player.setVelocityX(-1 * player.getVelocityX);
+  end;
+  if player.getPosY <= 0 then
+  begin
+    player.setPos(player.getPosX, 0);
+    player.setVelocityY(-1 * player.getVelocityY);
+  end
+  else if player.getPosY >= 736 then
+  begin
+    player.setPos(player.getPosX, 736);
+    player.setVelocityY(0);
   end;
 end;
 
