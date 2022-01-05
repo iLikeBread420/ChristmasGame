@@ -6,7 +6,7 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Classes, ugamedisplay, uentitydisplay, uentity
+  Classes, ugamedisplay, uentitydisplay, uentity, uroom, uroomdisplay
   { you can add units after this };
 
 var

@@ -5,7 +5,11 @@ unit ugamedisplay;
 interface
 
 uses
-  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay;
+  Classes, SysUtils, Math, SDL2, SDL2_Image, UEntity, UEntityDisplay, URoom, URoomDisplay;
+
+const
+  WIDTH: integer = 1920;
+  HEIGHT: integer = 1200;
 
 type
   TGameDisplay = class
@@ -14,9 +18,10 @@ type
       window: PSDL_Window;
       renderer: PSDL_Renderer;
       event: PSDL_Event;
-      mainViewport: TSDL_Rect;
       player: TEntity;
       playerDisplay: TEntityDisplay;
+      currentRoom: TRoom;
+      currentRoomDisplay: TRoomDisplay;
       procedure KeepInBounds();
     public
       constructor create();
@@ -29,19 +34,20 @@ implementation
 constructor TGameDisplay.create();
 begin
   has_error := SDL_Init(SDL_INIT_VIDEO OR SDL_INIT_TIMER OR SDL_INIT_EVENTS OR SDL_INIT_AUDIO);
-  has_error := SDL_CreateWindowAndRenderer(1280, 800, SDL_WINDOW_SHOWN, @window, @renderer);
+  has_error := SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_FULLSCREEN, @window, @renderer);
 
   // Tue so, als waere das Fenster immer 1280x800 Pixel gross.
-  has_error := SDL_RenderSetLogicalSize(renderer, 1280, 800);
+  has_error := SDL_RenderSetLogicalSize(renderer, 1920, 1200);
 
   new(event);
 
-  mainViewport.x := 0; mainViewport.y := 0;
-  mainViewport.w := 980; mainViewport.h := 800;
-
   player := TEntity.create('Player', 100, 4);
-  playerDisplay := TEntityDisplay.create(renderer, 'assets/Main.Character.prepare_to_walk1.png', 32, 64, player);
+  playerDisplay := TEntityDisplay.create(renderer, 'assets/MC.Default.standpng.png', 180, 150, player);
   player.setPos(100, 100);
+
+  currentRoom := TRoom.create(RM_INSIDE);
+  // Add entities to the room here.
+  currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
 end;
 
 procedure TGameDisplay.show();
@@ -50,14 +56,12 @@ var
   loopStart, loopEnd, velocityStepEnd: integer;
   elapsedMilli: double;
   dt: double;
-  gravity, sideForce: integer;
+  gravity: integer;
   d_pressed, a_pressed: boolean;
-  wasOutY, wasOutX: boolean;
 begin
   if has_error <> 0 then halt;
 
-  gravity := -10000000;
-  wasOutY := false; wasOutX := false;
+  gravity := -30000000;
   a_pressed := false; d_pressed := false;
 
   running := true;
@@ -66,10 +70,6 @@ begin
     loopStart := SDL_GetPerformanceCounter();
     velocityStepEnd := SDL_GetPerformanceCounter();
     dt := (velocityStepEnd - loopStart) / SDL_GetPerformanceFrequency() * 1000;
-    // Main Viewport clearen
-    SDL_RenderSetViewport(renderer, @mainViewport);
-    SDL_SetRenderDrawColor(renderer, 0, 170, 85, 255);
-    SDL_RenderFillRect(renderer, nil);
 
     // Event Loop
     while SDL_PollEvent(event) = 1 do
@@ -84,9 +84,9 @@ begin
         SDLK_SPACE:
         begin
           // Zahl etwas hoeher, weil es so intuitiver ist.
-          if player.getPosY >= 726 then
+          if player.getPosY >= 1200 - playerDisplay.getHeight() then
           begin
-            player.setVelocityY(60000);
+            player.setVelocityY(160000);
           end;
         end;
         //SDLK_s : player.setMovementTowards(DIR_BOTTOM, 1);
@@ -115,10 +115,12 @@ begin
     end;
     if a_pressed then
     begin
+      playerDisplay.setFlip(false);
       player.setVelocityX(-1);
     end;
     if (d_pressed and a_pressed) or (not(d_pressed) and not(a_pressed)) then
     begin
+      playerDisplay.setFlip(true);
       player.setVelocityX(0);
     end;
 
@@ -129,6 +131,7 @@ begin
 
     // Rendering
     // Sollte spaeter wahrscheinlich durch einen Loop ersetzt werden.
+    currentRoomDisplay.draw();
     playerDisplay.draw();
     // Beschriebene Szene rendern
     SDL_RenderPresent(renderer);
@@ -147,9 +150,9 @@ end;
 
 procedure TGameDisplay.KeepInBounds();
 begin
-  if player.getPosX >= 968 then
+  if player.getPosX >= WIDTH - playerDisplay.getWidth() then
   begin
-    player.setPos(968, player.getPosY);
+    player.setPos(WIDTH - playerDisplay.getWidth(), player.getPosY);
     player.setVelocityX(-1 * player.getVelocityX);
   end
   else if player.getPosX <= 0 then
@@ -162,9 +165,9 @@ begin
     player.setPos(player.getPosX, 0);
     player.setVelocityY(-1 * player.getVelocityY);
   end
-  else if player.getPosY >= 736 then
+  else if player.getPosY >= 1200 - playerDisplay.getHeight() then
   begin
-    player.setPos(player.getPosX, 736);
+    player.setPos(player.getPosX, 1200 - playerDisplay.getHeight());
     player.setVelocityY(0);
   end;
 end;
