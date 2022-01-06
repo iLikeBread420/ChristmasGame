@@ -14,6 +14,7 @@ type
     strict private
       kindOfRoom: roomType;
       entities: array of TEntity;
+      roomnumber : integer;
     public
       constructor create(rt: roomType);
       procedure addEntity(entity: TEntity);
