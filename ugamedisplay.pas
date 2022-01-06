@@ -44,7 +44,7 @@ begin
   new(event);
 
   player := TEntity.create('Player', 100, 4);
-  playerDisplay := TEntityDisplay.create(renderer, 'assets/MC.Default.standpng.png', 180, 150, player);
+  playerDisplay := TEntityDisplay.create(renderer, 'assets/MC.Default.standpng.png', 250, 220, player);
   player.setPos(100, 100);
 
   currentRoom := TRoom.create(RM_INSIDE);
