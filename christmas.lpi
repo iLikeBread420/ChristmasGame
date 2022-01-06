@@ -26,7 +26,7 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <Units Count="7">
+    <Units Count="6">
       <Unit0>
         <Filename Value="christmas.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -51,10 +51,6 @@
         <Filename Value="uroomdisplay.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit5>
-      <Unit6>
-        <Filename Value="uroomarrayfactory.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
