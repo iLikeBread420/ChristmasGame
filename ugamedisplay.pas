@@ -5,13 +5,14 @@ unit ugamedisplay;
 interface
 
 uses
-  Classes, SysUtils, Math, SDL2, SDL2_Image, UEntity, UEntityDisplay, URoom, URoomDisplay;
+  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, URoom, URoomDisplay;
 
 const
   WIDTH: integer = 1920;
   HEIGHT: integer = 1200;
 
 type
+  // Diese Klasse setzt praktisch alles zusammen
   TGameDisplay = class
     strict private
       has_error: integer;
@@ -22,6 +23,7 @@ type
       playerDisplay: TEntityDisplay;
       currentRoom: TRoom;
       currentRoomDisplay: TRoomDisplay;
+      roomArray: array [0..6] of TRoom;
       procedure KeepInBounds();
     public
       constructor create();
