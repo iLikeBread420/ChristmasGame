@@ -5,7 +5,7 @@ unit ugamedisplay;
 interface
 
 uses
-  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, URoom, URoomDisplay;
+  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, UPlayerDisplay, URoom, URoomDisplay;
 
 const
   WIDTH: integer = 1920;
@@ -44,7 +44,7 @@ begin
   new(event);
 
   player := TEntity.create('Player', 100, 4);
-  playerDisplay := TEntityDisplay.create(renderer, 'assets/MC.Default.standpng.png', 250, 220, player);
+  playerDisplay := TPlayerDisplay.create(renderer, 250, 220, player);
   player.setPos(100, 100);
 
   currentRoom := TRoom.create(RM_INSIDE);
@@ -86,9 +86,10 @@ begin
         SDLK_SPACE:
         begin
           // Zahl etwas hoeher, weil es so intuitiver ist.
-          if player.getPosY >= 1200 - playerDisplay.getHeight() then
+          if player.getPosY >= 1180 - playerDisplay.getHeight() then
           begin
             player.setVelocityY(160000);
+            playerDisplay.setMovementStatus(MV_JUMPING2);
           end;
         end;
         //SDLK_s : player.setMovementTowards(DIR_BOTTOM, 1);
@@ -114,6 +115,7 @@ begin
     if d_pressed then
     begin
       player.setVelocityX(1);
+      playerDisplay.setFlip(true);
     end;
     if a_pressed then
     begin
@@ -122,8 +124,31 @@ begin
     end;
     if (d_pressed and a_pressed) or (not(d_pressed) and not(a_pressed)) then
     begin
-      playerDisplay.setFlip(true);
       player.setVelocityX(0);
+    end;
+
+    // Wenn Spieler auf dem Boden steht, a priori movementStatus auf MV_STANDING setzen,
+    // um Spring-Animation zu beenden.
+    if player.getPosY >= HEIGHT - playerDisplay.getHeight() then
+    begin
+      // Lauf-Animation fuer den Spieler
+      if player.getVelocityX <> 0 then
+      begin
+        playerDisplay.setMoveAnimationCounter(playerDisplay.getMoveAnimationCounter + 1);
+        //playerDisplay.setMovementStatus(MV_WALKING1);
+        if playerDisplay.getMoveAnimationCounter > 15 then
+        begin
+          playerDisplay.setMoveAnimationCounter(0);
+          case playerDisplay.getMovementStatus of
+          MV_WALKING1: playerDisplay.setMovementStatus(MV_WALKING2);
+          MV_WALKING2, MV_STANDING, MV_JUMPING2: playerDisplay.setMovementStatus(MV_WALKING1);
+          end;
+        end;
+      end
+      else
+      begin
+        playerDisplay.setMovementStatus(MV_STANDING);
+      end;
     end;
 
     KeepInBounds();
@@ -167,9 +192,9 @@ begin
     player.setPos(player.getPosX, 0);
     player.setVelocityY(-1 * player.getVelocityY);
   end
-  else if player.getPosY >= 1200 - playerDisplay.getHeight() then
+  else if player.getPosY >= HEIGHT - playerDisplay.getHeight() then
   begin
-    player.setPos(player.getPosX, 1200 - playerDisplay.getHeight());
+    player.setPos(player.getPosX, HEIGHT - playerDisplay.getHeight());
     player.setVelocityY(0);
   end;
 end;

@@ -8,80 +8,94 @@ uses
   Classes, SysUtils, SDL2, SDL2_Image, UEntity;
 
 type
+  playerMvStatus = (MV_STANDING = 0, MV_WALKING1, MV_WALKING2,
+                   MV_JUMPING1, MV_JUMPING2, MV_ATTACK1, MV_ATTACK2);
 
   { TEntityDisplay }
 
   TEntityDisplay = class
-    strict private
-      mainTexture: PSDL_Texture;
+    protected
       renderer: PSDL_Renderer;
+      txtr: PSDL_Texture;
       rect: TSDL_Rect;
       entity: TEntity;
       flip: boolean;
       width: integer;
       height: integer;
-      MovementStatus : string;
+      movementStatus : playerMvStatus;
+      movementFrames: array [0..6] of PSDL_Texture;
+      moveAnimationCounter: integer;
     public
-      constructor create(rendr: PSDL_Renderer; img: string; w: integer; h: integer; ent: TEntity);
+      constructor create(rendr: PSDL_Renderer; w: integer; h: integer; ent: TEntity);
       procedure draw();
+      procedure loadTextures(); virtual;
+      procedure selectTexture(); virtual;
       procedure setFlip(value: boolean);
-      procedure setMovementStatus(status : string);
+      procedure setMovementStatus(status : playerMvStatus);
+      function getMovementStatus(): playerMvStatus;
       function getFlip(): boolean;
       function getWidth(): integer;
       function getHeight(): integer;
+      procedure setMoveAnimationCounter(value: integer);
+      function getMoveAnimationCounter(): integer;
       destructor destroy(); override;
   end;
 
 implementation
 
-constructor TEntityDisplay.create(rendr: PSDL_Renderer; img: string; w: integer; h: integer; ent: TEntity);
+constructor TEntityDisplay.create(rendr: PSDL_Renderer; w: integer; h: integer; ent: TEntity);
 begin
   renderer := rendr;
-  mainTexture := IMG_LoadTexture(renderer, PChar(img));
   rect.w := w;
   rect.h := h;
   width := w;
   height := h;
   entity := ent;
   flip := true;
+  moveAnimationCounter := 0;
+  movementStatus := MV_STANDING;
 end;
 
 procedure TEntityDisplay.draw();
 begin
   rect.x := entity.getPosX;
   rect.y := entity.getPosY;
-  case MovementStatus of
-    'd_standing': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Default.standpng.png');
-    'd_walking1': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Walking.1.png');
-    'd_walking2': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Walking.2.png');
-    'd_jumpting1': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Jumping.1.png');
-    'd_jumping2': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Jumping.2.png');
-    'attack1': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Attack.1.png');
-    'attack2': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Attack.2.png');
-    'w_standing': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Standpng.Holdin.Weapon.png');
-    'w_walking1': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Walking.1.HoldingWeapon.png');
-    'w_walking2': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Walking.2.Holding.Weapon.png');
-    'w_jumpting1': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Jumping.2.Holding.Weapon.png');
-    'w_jumping2': mainTexture := IMG_LoadTexture(renderer, 'assets/MC.Jumping.2.Holding.Weapon.png');
-  end;
+  selectTexture();
   if flip then
   begin
-    SDL_RenderCopyEx(renderer, mainTexture, nil, @rect, 0, nil, SDL_FLIP_HORIZONTAL);
+    SDL_RenderCopyEx(renderer, txtr, nil, @rect, 0, nil, SDL_FLIP_HORIZONTAL);
   end
   else
   begin
-    SDL_RenderCopy(renderer, mainTexture, nil, @rect);
+    SDL_RenderCopy(renderer, txtr, nil, @rect);
   end;
 end;
+
+procedure TEntityDisplay.loadTextures();
+begin
+  // To be implemented by subclasses, basically abstract
+end;
+
+procedure TEntityDisplay.selectTexture();
+begin
+  txtr := movementFrames[integer(movementStatus)];
+end;
+
 procedure TEntityDisplay.setFlip(value: boolean);
 begin
   flip := value;
 end;
 
-procedure TEntityDisplay.setMovementStatus(status: string);
+procedure TEntityDisplay.setMovementStatus(status: playerMvStatus);
 begin
   MovementStatus := status;
 end;
+
+function TEntityDisplay.getMovementStatus(): playerMvStatus;
+begin
+  Result := movementStatus;
+end;
+
 function TEntityDisplay.getFlip(): boolean;
 begin
   Result := flip;
@@ -97,9 +111,24 @@ begin
   Result := height;
 end;
 
-destructor TEntityDisplay.destroy();
+procedure TEntityDisplay.setMoveAnimationCounter(value: integer);
 begin
-  SDL_DestroyTexture(mainTexture);
+  moveAnimationCounter := value;
+end;
+
+function TEntityDisplay.getMoveAnimationCounter(): integer;
+begin
+  Result := moveAnimationCounter;
+end;
+
+destructor TEntityDisplay.destroy();
+var
+  i: integer;
+begin
+  for i:=Low(movementFrames) to High(MovementFrames) do
+  begin
+    SDL_DestroyTexture(movementFrames[i]);
+  end;
 end;
 
 end.
