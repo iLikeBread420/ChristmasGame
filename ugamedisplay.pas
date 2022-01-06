@@ -45,9 +45,9 @@ begin
 
   player := TEntity.create('Player', 100, 4);
   playerDisplay := TPlayerDisplay.create(renderer, 250, 220, player);
-  player.setPos(100, 100);
+  player.setPos(25, 1100);
 
-  currentRoom := TRoom.create(RM_INSIDE);
+  currentRoom := TRoom.create(RM_INSIDE1, 1);
   // Add entities to the room here.
   currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
 end;
@@ -150,6 +150,56 @@ begin
         playerDisplay.setMovementStatus(MV_STANDING);
       end;
     end;
+    //walking in another room->create new troom and troomdisplay
+    if player.getPosX() >= WIDTH - playerDisplay.getWidth() then
+      begin
+        case currentRoom.getRoomnumber of
+          1: begin
+             currentRoom := TRoom.create(RM_INSIDE2, 2);
+             currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+          2: begin
+              currentRoom := TRoom.create(RM_OUTSIDE, 3);
+              currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+              end;
+          3: begin
+               currentRoom := TRoom.create(RM_OUTSIDE, 4);
+               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+          4: begin
+               currentRoom := TRoom.create(RM_OUTSIDE, 5);
+               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+          5: begin
+               currentRoom := TRoom.create(RM_OUTSIDE, 6);
+               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+        end;
+        currentRoom.addEntity(player);
+        player.setPos(25, 1100);
+      end;
+
+    if player.getPosX() <= 0 then
+      begin
+        case currentRoom.getRoomnumber of
+          2: begin
+              currentRoom := TRoom.create(RM_OUTSIDE, 1);
+              currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+              end;
+          3: begin
+               currentRoom := TRoom.create(RM_OUTSIDE, 2);
+               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+          4: begin
+               currentRoom := TRoom.create(RM_OUTSIDE, 3);
+               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+          5: begin
+               currentRoom := TRoom.create(RM_OUTSIDE, 4);
+               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+             end;
+        end;
+      end;
 
     KeepInBounds();
 
@@ -177,12 +227,12 @@ end;
 
 procedure TGameDisplay.KeepInBounds();
 begin
-  if player.getPosX >= WIDTH - playerDisplay.getWidth() then
-  begin
-    player.setPos(WIDTH - playerDisplay.getWidth(), player.getPosY);
-    player.setVelocityX(-1 * player.getVelocityX);
-  end
-  else if player.getPosX <= 0 then
+     if (player.getPosX >= WIDTH - playerDisplay.getWidth()) and (currentRoom.getRoomNumber = 6) then
+       begin
+          player.setPos(WIDTH - playerDisplay.getWidth(), player.getPosY);
+          player.setVelocityX(-1 * player.getVelocityX);
+    end;
+  if (player.getPosX <= 0) and (currentRoom.getRoomnumber <> 1) then
   begin
     player.setPos(0, player.getPosY);
     player.setVelocityX(-1 * player.getVelocityX);

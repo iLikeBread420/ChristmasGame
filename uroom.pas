@@ -8,7 +8,9 @@ uses
   Classes, SysUtils, UEntity;
 
 type
-  roomType = (RM_INSIDE, RM_OUTSIDE);
+  roomType = (RM_INSIDE1, RM_INSIDE2, RM_OUTSIDE);
+
+  { TRoom }
 
   TRoom = class
     strict private
@@ -16,16 +18,18 @@ type
       entities: array of TEntity;
       roomnumber : integer;
     public
-      constructor create(rt: roomType);
+      constructor create(rt: roomType; rn : integer);
       procedure addEntity(entity: TEntity);
       function getKindOfRoom(): roomType;
+      function getRoomnumber() : integer;
   end;
 
 implementation
 
-constructor TRoom.create(rt: roomType);
+constructor TRoom.create(rt: roomType; rn : integer);
 begin
   kindOfRoom := rt;
+  roomnumber := rn;
 end;
 
 // Note: Be sure to use this procedure BEFORE CREATING a corresponding
@@ -40,6 +44,11 @@ end;
 function TRoom.getKindOfRoom(): roomType;
 begin
   Result := kindOfRoom;
+end;
+
+function TRoom.getRoomnumber(): integer;
+begin
+  Result := Roomnumber;
 end;
 
 end.
