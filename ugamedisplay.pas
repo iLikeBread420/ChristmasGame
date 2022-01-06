@@ -20,6 +20,8 @@ type
       renderer: PSDL_Renderer;
       event: PSDL_Event;
       player: TEntity;
+      gegner : TEntity;
+      gegnerDisplay : TEntityDisplay;
       playerDisplay: TEntityDisplay;
       currentRoom: TRoom;
       currentRoomDisplay: TRoomDisplay;
@@ -42,6 +44,10 @@ begin
   has_error := SDL_RenderSetLogicalSize(renderer, 1920, 1200);
 
   new(event);
+
+  gegner := TEntity.create('Gegner', 100, 4);
+  gegnerDisplay := GegnerDisplay.create(renderer, 250, 220, gegner);
+  gegner.setPos(1200, 1100);
 
   player := TEntity.create('Player', 100, 4);
   playerDisplay := TPlayerDisplay.create(renderer, 250, 220, player);
