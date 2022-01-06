@@ -60,11 +60,9 @@ var
   dt: double;
   gravity: integer;
   d_pressed, a_pressed: boolean;
-  ascounter : integer;
 begin
   if has_error <> 0 then halt;
 
-  ascounter := 0;
   gravity := -30000000;
   a_pressed := false; d_pressed := false;
 
@@ -106,18 +104,6 @@ begin
         //SDLK_s: player.setMovementTowards(DIR_BOTTOM, 0);
         end;
       end;
-      if d_pressed = true or a_pressed = true then
-        begin
-          ascounter := ascounter + 1;
-          if ascounter <= 15 then playerDisplay.setMovementStatus('d_walking1')
-          else if (ascounter > 15) and (ascounter <= 30) then playerDisplay.setMovementStatus('d_walking2')
-          else if (ascounter > 30) and (ascounter <= 45) then playerDisplay.setMovementStatus('d_walking1')
-          else if (ascounter > 45) and (ascounter <= 60) then
-          begin
-            playerDisplay.setMovementStatus('d_walking2');
-            ascounter := ascounter + 1;
-          end;
-        end;
     end;
 
     // Move in Y-Direction for jumping

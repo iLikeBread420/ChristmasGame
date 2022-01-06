@@ -82,7 +82,6 @@ procedure TEntityDisplay.setMovementStatus(status: string);
 begin
   MovementStatus := status;
 end;
-
 function TEntityDisplay.getFlip(): boolean;
 begin
   Result := flip;
