@@ -5,7 +5,7 @@ unit ugamedisplay;
 interface
 
 uses
-  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, UPlayerDisplay, URoom, URoomDisplay;
+  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, UPlayerDisplay, URoom, URoomDisplay, SDL2_ttf;
 
 const
   WIDTH: integer = 1920;
@@ -24,6 +24,12 @@ type
       currentRoom: TRoom;
       currentRoomDisplay: TRoomDisplay;
       roomArray: array [0..6] of TRoom;
+      sdlSurface1 : PSDL_Surface;
+      ttfFont : PTTF_Font;
+      sdlColor1, sdlColor2 : TSDL_Color;
+      sdlWindow1 : PSDL_Window;
+      sdlRenderer : PSDL_Renderer;
+      sdlTexture1 : PSDL_Texture;
       procedure KeepInBounds();
     public
       constructor create();
@@ -50,6 +56,20 @@ begin
   currentRoom := TRoom.create(RM_INSIDE1, 1);
   // Add entities to the room here.
   currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+
+  if SDL_Init(SDL_INIT_VIDEO) < 0 then HALT;
+
+  sdlColor1.r := 255; sdlColor1.g := 255; sdlColor1.b := 255;      //define colors back and white
+  sdlColor2.r := 0; sdlColor2.g := 0; sdlColor2.b := 0;
+
+  if TTF_Init = -1 then HALT;
+  ttfFont := TTF_OpenFont('C:\WINDOWS\fonts\Arial.ttf', 40);          //define font
+
+  sdlTexture1 := SDL_CreateTextureFromSurface(sdlRenderer, sdlSurface1);
+  SDL_RenderCopy(sdlRenderer, sdlTexture1, nil, nil);
+  SDL_RenderPresent(sdlRenderer);
+
+  sdlSurface1 := TTF_RenderText_Shaded(ttfFont, 'Hello World!', sdlColor1, sdlColor2);
 end;
 
 procedure TGameDisplay.show();
