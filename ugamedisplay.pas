@@ -25,9 +25,11 @@ type
       player: TEntity;
       playerDisplay: TEntityDisplay;
       currentRoom: TRoom;
+      currentRoomIndex: integer;
       currentRoomDisplay: TRoomDisplay;
       roomArray: array [0..6] of TRoom;
-      sdlSurface1 : PSDL_Surface;
+      roomDisplayArray: array[0..6] of TRoomDisplay;
+      //sdlSurface1 : PSDL_Surface;
       ttfFont : PTTF_Font;
       sdlColor1, sdlColor2 : TSDL_Color;
       sdlWindow1 : PSDL_Window;
@@ -37,14 +39,16 @@ type
     public
       constructor create();
       procedure show();
-      procedure playerattack();   //abstract, can be changed later
-      procedure gegnerattack();
+      //procedure playerattack();   //abstract, can be changed later
+      //procedure gegnerattack();
       destructor destroy(); override;
   end;
 
 implementation
 
 constructor TGameDisplay.create();
+var
+  rm_counter: integer;
 begin
   has_error := SDL_Init(SDL_INIT_VIDEO OR SDL_INIT_TIMER OR SDL_INIT_EVENTS OR SDL_INIT_AUDIO);
   has_error := SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_FULLSCREEN, @window, @renderer);
@@ -58,23 +62,26 @@ begin
   playerDisplay := TPlayerDisplay.create(renderer, 250, 220, player);
   player.setPos(25, 1100);
 
-  currentRoom := TRoom.create(RM_INSIDE1, 1);
+  roomArray[0] := TRoom.create(RM_INSIDE1, 1);
+  roomArray[1] := TRoom.create(RM_INSIDE2, 2);
+  roomArray[2] := TRoom.create(RM_OUTSIDE, 3);
+  roomArray[3] := TRoom.create(RM_OUTSIDE, 4);
+  roomArray[4] := TRoom.create(RM_OUTSIDE, 5);
+  roomArray[5] := TRoom.create(RM_OUTSIDE, 6);
+  for rm_counter:=Low(roomArray) to High(roomArray) do
+  begin
+    roomDisplayArray[rm_counter] := TRoomDisplay.create(renderer, roomArray[rm_counter], WIDTH, HEIGHT);
+  end;
+  //currentRoom := TRoom.create(RM_INSIDE1, 1);
+  currentRoomIndex := 0;
   // Add entities to the room here.
-  currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-
-  if SDL_Init(SDL_INIT_VIDEO) < 0 then HALT;
+  //currentRoomDisplay := TRoomDisplay.create(renderer, roomArray[currentRoomIndex], WIDTH, HEIGHT);
 
   sdlColor1.r := 255; sdlColor1.g := 255; sdlColor1.b := 255;      //define colors back and white
   sdlColor2.r := 0; sdlColor2.g := 0; sdlColor2.b := 0;
 
   if TTF_Init = -1 then HALT;
   ttfFont := TTF_OpenFont('C:\WINDOWS\fonts\Arial.ttf', 40);          //define font
-
-  sdlTexture1 := SDL_CreateTextureFromSurface(sdlRenderer, sdlSurface1);
-  SDL_RenderCopy(sdlRenderer, sdlTexture1, nil, nil);
-  SDL_RenderPresent(sdlRenderer);
-
-  sdlSurface1 := TTF_RenderText_Shaded(ttfFont, 'Hello World!', sdlColor1, sdlColor2);
 end;
 
 procedure TGameDisplay.show();
@@ -177,22 +184,17 @@ begin
         playerDisplay.setMovementStatus(MV_STANDING);
       end;
     end;
+
     //walking in another room->create new troom and troomdisplay
     if player.getPosX() >= WIDTH - playerDisplay.getWidth() then
       begin
-        case currentRoom.getRoomnumber of
-          1: currentRoom := TRoom.create(RM_INSIDE2, 2);
-          2: currentRoom := TRoom.create(RM_OUTSIDE, 3);
-          3: currentRoom := TRoom.create(RM_OUTSIDE, 4);
-          4: currentRoom := TRoom.create(RM_OUTSIDE, 5);
-          5: currentRoom := TRoom.create(RM_OUTSIDE, 6);
-        end;
-        currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-        currentRoom.addEntity(player);
+        currentRoomIndex := currentRoomIndex + 1;
+        //currentRoomDisplay := TRoomDisplay.create(renderer, roomArray[currentRoomIndex], WIDTH, HEIGHT);
+        //currentRoom.addEntity(player);
         player.setPos(100, 1100);
       end;
 
-    if player.getPosX() <= 0 then             //render previours room
+    {if player.getPosX() <= 0 then             //render previours room
       begin
         case currentRoom.getRoomnumber of
           2: currentRoom := TRoom.create(RM_OUTSIDE, 1);
@@ -203,17 +205,17 @@ begin
         currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
         currentRoom.addEntity(player);
         player.setPos(1900, 1100);
-      end;
+      end;}
 
     KeepInBounds();
 
     //idea for enemy detection system                        //AOD is Area of detection
-    if (player.getPosX > (enemy.getPosX - AOD)) and player.getPosX < ((enemy.getPosX + enemyDisplay.getWidth + AOD)) then
+    {if (player.getPosX > (enemy.getPosX - AOD)) and player.getPosX < ((enemy.getPosX + enemyDisplay.getWidth + AOD)) then
       begin
         //walk towards player
         //probs get  posx and if playerposx > enemyposition x move one way ....
         enemy.enemyattack;
-      end;
+      end;}
 
 
 
@@ -222,7 +224,7 @@ begin
 
     // Rendering
     // Sollte spaeter wahrscheinlich durch einen Loop ersetzt werden.
-    currentRoomDisplay.draw();
+    roomDisplayArray[currentRoomIndex].draw();
     playerDisplay.draw();
     // Beschriebene Szene rendern
     SDL_RenderPresent(renderer);
@@ -239,7 +241,7 @@ begin
   end;
 end;
 
-procedure TGameDisplay.playerattack();                                          //hitbox idea
+{procedure TGameDisplay.playerattack();                                          //hitbox idea
 begin
   //animation loop
   if (player.getPosX + playerDisplay.getWidth()) > (gegner.getPosX) and
@@ -258,11 +260,11 @@ begin
        begin
          Gegner.takeDamage;
 end;
-end;
+end;}
 
 procedure TGameDisplay.KeepInBounds();
 begin
-     if (player.getPosX >= WIDTH - playerDisplay.getWidth()) and (currentRoom.getRoomNumber = 6) then
+     {if (player.getPosX >= WIDTH - playerDisplay.getWidth()) and (currentRoom.getRoomNumber = 6) then
        begin
           player.setPos(WIDTH - playerDisplay.getWidth(), player.getPosY);
           player.setVelocityX(-1 * player.getVelocityX);
@@ -271,7 +273,7 @@ begin
   begin
     player.setPos(0, player.getPosY);
     player.setVelocityX(-1 * player.getVelocityX);
-  end;
+  end;}
   if player.getPosY <= 0 then
   begin
     player.setPos(player.getPosX, 0);
