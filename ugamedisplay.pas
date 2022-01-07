@@ -20,8 +20,6 @@ type
       renderer: PSDL_Renderer;
       event: PSDL_Event;
       player: TEntity;
-      gegner : TEntity;
-      gegnerDisplay : TEntityDisplay;
       playerDisplay: TEntityDisplay;
       currentRoom: TRoom;
       currentRoomDisplay: TRoomDisplay;
