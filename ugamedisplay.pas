@@ -79,7 +79,7 @@ var
   elapsedMilli: double;
   dt: double;
   gravity: integer;
-  d_pressed, a_pressed: boolean;
+  d_pressed, a_pressed, k_pressed : boolean;
 begin
   if has_error <> 0 then halt;
 
@@ -103,6 +103,7 @@ begin
         case (event^.key.keysym.sym) of
         SDLK_d : d_pressed := true;
         SDLK_a : a_pressed := true;
+        SDLK_k : k_pressed := true;
         SDLK_SPACE:
         begin
           // Zahl etwas hoeher, weil es so intuitiver ist.
@@ -121,6 +122,7 @@ begin
         case (event^.key.keysym.sym) of
         SDLK_d: d_pressed := false;
         SDLK_a: a_pressed := false;
+        SDLK_k: k_pressed := false;
         //SDLK_w: player.setMovementTowards(DIR_TOP, 0);
         //SDLK_s: player.setMovementTowards(DIR_BOTTOM, 0);
         end;
