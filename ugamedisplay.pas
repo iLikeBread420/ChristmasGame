@@ -207,6 +207,16 @@ begin
 
     KeepInBounds();
 
+    //idea for enemy detection system                        //AOD is Area of detection
+    if (player.getPosX > (enemy.getPosX - AOD)) and player.getPosX < ((enemy.getPosX + enemyDisplay.getWidth + AOD)) then
+      begin
+        //walk towards player
+        //probs get  posx and if playerposx > enemyposition x move one way ....
+        enemy.enemyattack;
+      end;
+
+
+
     // Bewegung in X-Richtung
     player.move(player.getVelocityX * player.getSpeed, 0);
 
