@@ -45,10 +45,6 @@ begin
 
   new(event);
 
-  gegner := TEntity.create('Gegner', 100, 4);
-  gegnerDisplay := GegnerDisplay.create(renderer, 250, 220, gegner);
-  gegner.setPos(1200, 1100);
-
   player := TEntity.create('Player', 100, 4);
   playerDisplay := TPlayerDisplay.create(renderer, 250, 220, player);
   player.setPos(25, 1100);
@@ -160,51 +156,28 @@ begin
     if player.getPosX() >= WIDTH - playerDisplay.getWidth() then
       begin
         case currentRoom.getRoomnumber of
-          1: begin
-             currentRoom := TRoom.create(RM_INSIDE2, 2);
-             currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
-          2: begin
-              currentRoom := TRoom.create(RM_OUTSIDE, 3);
-              currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-              end;
-          3: begin
-               currentRoom := TRoom.create(RM_OUTSIDE, 4);
-               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
-          4: begin
-               currentRoom := TRoom.create(RM_OUTSIDE, 5);
-               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
-          5: begin
-               currentRoom := TRoom.create(RM_OUTSIDE, 6);
-               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
+          1: currentRoom := TRoom.create(RM_INSIDE2, 2);
+          2: currentRoom := TRoom.create(RM_OUTSIDE, 3);
+          3: currentRoom := TRoom.create(RM_OUTSIDE, 4);
+          4: currentRoom := TRoom.create(RM_OUTSIDE, 5);
+          5: currentRoom := TRoom.create(RM_OUTSIDE, 6);
         end;
+        currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
         currentRoom.addEntity(player);
-        player.setPos(25, 1100);
+        player.setPos(100, 1100);
       end;
 
-    if player.getPosX() <= 0 then
+    if player.getPosX() <= 0 then             //render previours room
       begin
         case currentRoom.getRoomnumber of
-          2: begin
-              currentRoom := TRoom.create(RM_OUTSIDE, 1);
-              currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-              end;
-          3: begin
-               currentRoom := TRoom.create(RM_OUTSIDE, 2);
-               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
-          4: begin
-               currentRoom := TRoom.create(RM_OUTSIDE, 3);
-               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
-          5: begin
-               currentRoom := TRoom.create(RM_OUTSIDE, 4);
-               currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-             end;
+          2: currentRoom := TRoom.create(RM_OUTSIDE, 1);
+          3: currentRoom := TRoom.create(RM_OUTSIDE, 2);
+          4: currentRoom := TRoom.create(RM_OUTSIDE, 3);
+          5: currentRoom := TRoom.create(RM_OUTSIDE, 4);
         end;
+        currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
+        currentRoom.addEntity(player);
+        player.setPos(1900, 1100);
       end;
 
     KeepInBounds();
