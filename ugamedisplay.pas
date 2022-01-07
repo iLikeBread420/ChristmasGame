@@ -194,18 +194,14 @@ begin
         player.setPos(100, 1100);
       end;
 
-    {if player.getPosX() <= 0 then             //render previours room
+     if player.getPosX() <= 0 then             //render previours room
       begin
-        case currentRoom.getRoomnumber of
-          2: currentRoom := TRoom.create(RM_OUTSIDE, 1);
-          3: currentRoom := TRoom.create(RM_OUTSIDE, 2);
-          4: currentRoom := TRoom.create(RM_OUTSIDE, 3);
-          5: currentRoom := TRoom.create(RM_OUTSIDE, 4);
+        currentRoomIndex := currentRoomIndex - 1;
         end;
         currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
         currentRoom.addEntity(player);
         player.setPos(1900, 1100);
-      end;}
+      end;
 
     KeepInBounds();
 
@@ -239,7 +235,6 @@ begin
     SDL_Delay(Floor(16.6666 - elapsedMilli));
     writeln('Elapsed: ' + IntToStr(Floor(16.6666 - elapsedMilli)));
   end;
-end;
 
 {procedure TGameDisplay.playerattack();                                          //hitbox idea
 begin
