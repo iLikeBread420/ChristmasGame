@@ -26,7 +26,7 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <Units Count="11">
+    <Units Count="13">
       <Unit0>
         <Filename Value="christmas.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -71,6 +71,14 @@
         <Filename Value="uboss.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="ubossdisplay.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="uelfdisplay.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
