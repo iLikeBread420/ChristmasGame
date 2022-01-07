@@ -28,7 +28,7 @@ begin
   room := rm;
   case (room.getKindOfRoom) of
   RM_INSIDE1: bgTexture := IMG_LoadTexture(renderer, PChar('assets\Background.Room.1_downscaled.png'));
-  RM_INSIDE2: bgTexture := IMG_LoadTexture(renderer, PChar('assets\Background.Room.2.1.png'));
+  RM_INSIDE2: bgTexture := IMG_LoadTexture(renderer, PChar('assets\Background.Room.2.1_downscaled.png'));
   RM_OUTSIDE: bgTexture := IMG_LoadTexture(renderer, PChar('assets\Background.Outside_downscaled.png'));
   end;
   rect.x := 0;
