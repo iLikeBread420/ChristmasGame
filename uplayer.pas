@@ -1,4 +1,4 @@
-unit uboss;
+unit uplayer;
 
 {$mode objfpc}{$H+}
 
@@ -8,16 +8,17 @@ uses
   Classes, SysUtils, UEntity;
 
 type
-  TBoss = class(TEntity)
+  TPlayer = class(TEntity)
     public
       constructor create(nm: string; maxHealth: integer; spd: integer);
   end;
 
 implementation
 
-constructor TBoss.create(nm: string; maxHealth: integer; spd: integer);
+constructor TPlayer.create(nm: string; maxHealth: integer; spd: integer);
 begin
   inherited create(nm, maxHealth, spd);
 end;
 
 end.
+
