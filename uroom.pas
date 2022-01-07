@@ -32,6 +32,9 @@ begin
   roomnumber := rn;
 end;
 
+// Note: Be sure to use this procedure BEFORE CREATING a corresponding
+// TRoomDisplay instance. TRoomDisplay will NOT check for changes in its
+// TRoom instance.
 procedure TRoom.addEntity(entity: TEntity);
 begin
   setLength(entities, length(entities) + 1);
