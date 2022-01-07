@@ -13,6 +13,9 @@ const
 
 type
   // Diese Klasse setzt praktisch alles zusammen
+
+  { TGameDisplay }
+
   TGameDisplay = class
     strict private
       has_error: integer;
@@ -34,6 +37,8 @@ type
     public
       constructor create();
       procedure show();
+      procedure playerattack();   //abstract, can be changed later
+      procedure gegnerattack();
       destructor destroy(); override;
   end;
 
@@ -222,6 +227,27 @@ begin
     SDL_Delay(Floor(16.6666 - elapsedMilli));
     writeln('Elapsed: ' + IntToStr(Floor(16.6666 - elapsedMilli)));
   end;
+end;
+
+procedure TGameDisplay.playerattack();                                          //hitbox idea
+begin
+  //animation loop
+  if (player.getPosX + playerDisplay.getWidth()) > (gegner.getPosX) and
+     (player.getPosX + playerDisplay.getWidth()) > (gegner.getPosX + gegnerDisplay.getWidth()) and
+     (player.getPosY < gegner.getPosY + (gegnerDisplay.getHeight())/2) then
+       begin
+         Gegner.takeDamage;
+end;
+end;
+
+procedure TGameDisplay.gegnerattack();
+begin
+  if (gegner.getPosX + gegnerDisplay.getWidth()) > (player.getPosX) and
+     (gegner.getPosX + gegnerDisplay.getWidth()) > (player.getPosX + playerDisplay.getWidth()) and
+     (gegner.getPosY < player.getPosY + (playerDisplay.getHeight())/2) then
+       begin
+         Gegner.takeDamage;
+end;
 end;
 
 procedure TGameDisplay.KeepInBounds();
