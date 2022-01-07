@@ -24,21 +24,17 @@ type
       event: PSDL_Event;
       player: TEntity;
       playerDisplay: TEntityDisplay;
-      currentRoom: TRoom;
       currentRoomIndex: integer;
-      currentRoomDisplay: TRoomDisplay;
       roomArray: array [0..6] of TRoom;
       roomDisplayArray: array[0..6] of TRoomDisplay;
       //sdlSurface1 : PSDL_Surface;
       ttfFont : PTTF_Font;
       sdlColor1, sdlColor2 : TSDL_Color;
-      sdlWindow1 : PSDL_Window;
-      sdlRenderer : PSDL_Renderer;
-      sdlTexture1 : PSDL_Texture;
-      procedure KeepInBounds();
     public
       constructor create();
       procedure show();
+      procedure KeepInBounds();
+      procedure CheckRoomChanges();
       //procedure playerattack();   //abstract, can be changed later
       //procedure gegnerattack();
       destructor destroy(); override;
@@ -68,14 +64,11 @@ begin
   roomArray[3] := TRoom.create(RM_OUTSIDE, 4);
   roomArray[4] := TRoom.create(RM_OUTSIDE, 5);
   roomArray[5] := TRoom.create(RM_OUTSIDE, 6);
-  for rm_counter:=Low(roomArray) to High(roomArray) do
+  for rm_counter:=0 to 5 do
   begin
     roomDisplayArray[rm_counter] := TRoomDisplay.create(renderer, roomArray[rm_counter], WIDTH, HEIGHT);
   end;
-  //currentRoom := TRoom.create(RM_INSIDE1, 1);
   currentRoomIndex := 0;
-  // Add entities to the room here.
-  //currentRoomDisplay := TRoomDisplay.create(renderer, roomArray[currentRoomIndex], WIDTH, HEIGHT);
 
   sdlColor1.r := 255; sdlColor1.g := 255; sdlColor1.b := 255;      //define colors back and white
   sdlColor2.r := 0; sdlColor2.g := 0; sdlColor2.b := 0;
@@ -185,24 +178,7 @@ begin
       end;
     end;
 
-    //walking in another room->create new troom and troomdisplay
-    if player.getPosX() >= WIDTH - playerDisplay.getWidth() then
-      begin
-        currentRoomIndex := currentRoomIndex + 1;
-        //currentRoomDisplay := TRoomDisplay.create(renderer, roomArray[currentRoomIndex], WIDTH, HEIGHT);
-        //currentRoom.addEntity(player);
-        player.setPos(100, 1100);
-      end;
-
-     if player.getPosX() <= 0 then             //render previours room
-      begin
-        currentRoomIndex := currentRoomIndex - 1;
-        end;
-        currentRoomDisplay := TRoomDisplay.create(renderer, currentRoom, WIDTH, HEIGHT);
-        currentRoom.addEntity(player);
-        player.setPos(1900, 1100);
-      end;
-
+    CheckRoomChanges();
     KeepInBounds();
 
     //idea for enemy detection system                        //AOD is Area of detection
@@ -235,6 +211,7 @@ begin
     SDL_Delay(Floor(16.6666 - elapsedMilli));
     writeln('Elapsed: ' + IntToStr(Floor(16.6666 - elapsedMilli)));
   end;
+end;
 
 {procedure TGameDisplay.playerattack();                                          //hitbox idea
 begin
@@ -257,18 +234,10 @@ begin
 end;
 end;}
 
+// Diese Prozedur sorgt dafür, dass der Spieler in Y-Richtung das Spielfeld
+// nicht verlassen kann.
 procedure TGameDisplay.KeepInBounds();
 begin
-     {if (player.getPosX >= WIDTH - playerDisplay.getWidth()) and (currentRoom.getRoomNumber = 6) then
-       begin
-          player.setPos(WIDTH - playerDisplay.getWidth(), player.getPosY);
-          player.setVelocityX(-1 * player.getVelocityX);
-    end;
-  if (player.getPosX <= 0) and (currentRoom.getRoomnumber <> 1) then
-  begin
-    player.setPos(0, player.getPosY);
-    player.setVelocityX(-1 * player.getVelocityX);
-  end;}
   if player.getPosY <= 0 then
   begin
     player.setPos(player.getPosX, 0);
@@ -278,6 +247,38 @@ begin
   begin
     player.setPos(player.getPosX, HEIGHT - playerDisplay.getHeight());
     player.setVelocityY(0);
+  end;
+end;
+
+// Diese Prozedur wechselt den Raum, wenn der Spieler in X-Richtung den Rand des
+// Spielfelds erreicht und sich nicht im letzten oder ersten Raum befindet.
+procedure TGameDisplay.CheckRoomChanges();
+begin
+  //walking in another room->create new troom and troomdisplay
+  if player.getPosX() >= WIDTH - Floor(playerDisplay.getWidth / 2) then
+  begin
+    if currentRoomIndex < 5 then begin
+      currentRoomIndex := currentRoomIndex + 1;
+      roomArray[currentRoomIndex].addEntity(player);
+      player.setPos(20, 1100);
+    end
+    else
+    begin
+      player.setVelocityX(-1 * player.getVelocityX);
+      player.setPos(player.getPosX - 5, player.getPosY);
+    end;
+  end
+  else if player.getPosX() <= 0 - Floor(playerDisplay.getWidth / 2) then             //render previous room
+  begin
+    if currentRoomIndex > 0 then begin
+      currentRoomIndex := currentRoomIndex - 1;
+      roomArray[currentRoomIndex].addEntity(player);
+      player.setPos(1920 - Floor(playerDisplay.getWidth / 2), 1100);
+    end
+    else begin
+      player.setVelocityX(-1 * player.getVelocityX);
+      player.setPos(player.getPosX + 5, player.getPosY);
+    end;
   end;
 end;
 
