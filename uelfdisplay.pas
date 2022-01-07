@@ -5,7 +5,7 @@ unit uelfdisplay;
 interface
 
 uses
-  Classes, SysUtils, uentitydisplay;
+  Classes, SysUtils, SDL2, UEntity, uentitydisplay;
 
 type
 

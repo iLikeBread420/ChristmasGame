@@ -5,7 +5,7 @@ unit ugamedisplay;
 interface
 
 uses
-  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, UPlayerDisplay, URoom, URoomDisplay, SDL2_ttf;
+  Classes, SysUtils, Math, SDL2, UEntity, UEntityDisplay, UPlayerDisplay, URoom, URoomDisplay, UDialogDisplay;
 
 const
   WIDTH: integer = 1920;
@@ -27,9 +27,7 @@ type
       currentRoomIndex: integer;
       roomArray: array [0..6] of TRoom;
       roomDisplayArray: array[0..6] of TRoomDisplay;
-      //sdlSurface1 : PSDL_Surface;
-      ttfFont : PTTF_Font;
-      sdlColor1, sdlColor2 : TSDL_Color;
+      dialogWidget: TDialogDisplay;
     public
       constructor create();
       procedure show();
@@ -70,11 +68,7 @@ begin
   end;
   currentRoomIndex := 0;
 
-  sdlColor1.r := 255; sdlColor1.g := 255; sdlColor1.b := 255;      //define colors back and white
-  sdlColor2.r := 0; sdlColor2.g := 0; sdlColor2.b := 0;
-
-  if TTF_Init = -1 then HALT;
-  ttfFont := TTF_OpenFont('C:\WINDOWS\fonts\Arial.ttf', 40);          //define font
+  dialogWidget := TDialogDisplay.create(renderer, WIDTH, HEIGHT);
 end;
 
 procedure TGameDisplay.show();
@@ -198,6 +192,7 @@ begin
     // Sollte spaeter wahrscheinlich durch einen Loop ersetzt werden.
     roomDisplayArray[currentRoomIndex].draw();
     playerDisplay.draw();
+    dialogWidget.draw();
     // Beschriebene Szene rendern
     SDL_RenderPresent(renderer);
     // Vergangene Zeit seit Beginn des Programms wird zu Anfang und Ende des

@@ -5,7 +5,7 @@ unit ubossdisplay;
 interface
 
 uses
-  Classes, SysUtils, uentitydisplay;
+  Classes, SysUtils, SDL2, UEntity, uentitydisplay;
 
 type
 
