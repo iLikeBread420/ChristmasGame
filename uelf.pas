@@ -19,7 +19,7 @@ uses
       posX: integer;
       posY: integer;
       speed: integer;
-      kindofnpc : string;
+      kindofnpc : string;       //important cause one elf wont be an enemy but and npc to talk to in room 2
       velocity: array [0..1] of integer;
     public
       constructor create(nm: string; maxHealth: integer; spd: integer; konpc : string);
