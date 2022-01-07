@@ -5,7 +5,15 @@ unit uelfdisplay;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, uentitydisplay;
+
+type
+  TElfDisplay = class(TEntityDisplay)
+    strict private
+
+    public
+
+  end;
 
 implementation
 
